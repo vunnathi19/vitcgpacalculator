@@ -20,9 +20,7 @@ body {
   animation-delay: 5s;
 }
 
-#app {
-  display: none;
-}
+#app { display: none; }
 
 h1, h2 {
   text-align: center;
@@ -56,11 +54,6 @@ button {
   border: none;
   color: white;
   cursor: pointer;
-}
-
-.result {
-  margin-top: 15px;
-  white-space: pre-line;
 }
 
 @keyframes fadeOut {
