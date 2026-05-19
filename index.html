@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>VIT GPA & CGPA Adviser</title>
+<title>VIT GPA & CGPA Adviser (PRO)</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -11,7 +11,6 @@
 
 <body>
 
-<!-- LOADER -->
 <div id="loader">
   <h1>🎓 VIT Academic System</h1>
   <p>Loading...</p>
@@ -19,7 +18,7 @@
 
 <div id="app">
 
-<h1>📘 GPA & CGPA System</h1>
+<h1>📘 GPA & CGPA Adviser</h1>
 
 <!-- GPA -->
 <section>
@@ -34,7 +33,7 @@
 <button onclick="addRow()">Add Subject</button>
 <button onclick="calcGPA()">Calculate GPA</button>
 
-<div class="result" id="gpaOut"></div>
+<div id="gpaOut"></div>
 </section>
 
 <!-- CGPA -->
@@ -50,18 +49,17 @@
 <button onclick="addSem()">Add Semester</button>
 <button onclick="calcCGPA()">Calculate CGPA</button>
 
-<div class="result" id="cgpaOut"></div>
+<div id="cgpaOut"></div>
 </section>
 
 <!-- ADVISER -->
 <section>
-<h2>🧠 Adviser (Grade Analysis)</h2>
+<h2>🧠 Pro Adviser (OCR Analysis)</h2>
 
 <input type="file" id="img">
 <button onclick="analyse()">Analyze Screenshot</button>
 
-<div class="result" id="advice"></div>
-
+<div id="advice"></div>
 </section>
 
 </div>
