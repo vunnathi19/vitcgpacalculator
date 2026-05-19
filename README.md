@@ -36,3 +36,6 @@ System extracts grades automatically
 Weak subjects are identified
 Improvement cases are simulated
 Final CGPA improvement is displayed
+
+
+https://vunnathi19.github.io/vitcgpacalculator/
