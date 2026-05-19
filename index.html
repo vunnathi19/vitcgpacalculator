@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VIT GPA & CGPA AI Adviser</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <h1>🎓 Welcome to VIT AI Academic System</h1>
+  <p>Loading your dashboard...</p>
+</div>
+
+<div id="app">
+
+<h1>VIT GPA & CGPA Adviser System</h1>
+
+<!-- GPA -->
+<section>
+<h2>📊 GPA Calculator</h2>
+
+<table id="gpaTable">
+<tr>
+<th>Subject</th><th>Credits</th><th>Grade</th><th>GP</th><th>Total</th>
+</tr>
+</table>
+
+<button onclick="addRow()">Add Subject</button>
+<button onclick="calcGPA()">Calculate GPA</button>
+
+<div class="result" id="gpaOut"></div>
+</section>
+
+<!-- CGPA -->
+<section>
+<h2>📈 CGPA Calculator</h2>
+
+<table id="cgpaTable">
+<tr>
+<th>Semester</th><th>GPA</th><th>Credits</th>
+</tr>
+</table>
+
+<button onclick="addSem()">Add Semester</button>
+<button onclick="calcCGPA()">Calculate CGPA</button>
+
+<div class="result" id="cgpaOut"></div>
+</section>
+
+<!-- GRAPH -->
+<section>
+<h2>📊 CGPA Improvement Graph</h2>
+<canvas id="chart"></canvas>
+</section>
+
+<!-- CHATBOT -->
+<section>
+<h2>🤖 AI Adviser Chatbot</h2>
+
+<input id="chatInput" placeholder="Ask: how to improve CGPA?">
+<button onclick="chat()">Ask</button>
+
+<div class="result" id="chatOut"></div>
+</section>
+
+<!-- ADVISER -->
+<section>
+<h2>🧠 Adviser (Upload Grade Screenshot)</h2>
+
+<input type="file" id="img">
+<button onclick="analyse()">Analyze & Improve CGPA</button>
+
+<div class="result" id="advice"></div>
+
+</section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
