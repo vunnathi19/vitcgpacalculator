@@ -1,13 +1,13 @@
 
 /* ---------- LOADER ---------- */
-setTimeout(() => {
-  document.getElementById("loader").style.display = "none";
-  document.getElementById("app").style.display = "block";
-}, 5000);
+setTimeout(()=>{
+  document.getElementById("loader").style.display="none";
+  document.getElementById("app").style.display="block";
+},5000);
 
 /* ---------- GPA ---------- */
 
-function gp(g){
+function gradePoint(g){
   return {S:10,A:9,B:8,C:7,D:6,E:5,F:0}[g]||0;
 }
 
@@ -35,7 +35,7 @@ function calcGPA(){
     let c=+r.cells[1].querySelector("input").value;
     let g=r.cells[2].querySelector("select").value;
 
-    let p=gp(g);
+    let p=gradePoint(g);
     tc+=c;
     tp+=c*p;
 
@@ -79,11 +79,7 @@ function calcCGPA(){
     "📈 CGPA = "+window.currentCGPA.toFixed(2);
 }
 
-/* ---------- ADVISER ---------- */
-
-function gp2(g){
-  return {S:10,A:9,B:8,C:7,D:6,E:5,F:0}[g]||0;
-}
+/* ---------- PRO OCR ADVISER ---------- */
 
 function upgrade(g){
   const order=["F","E","D","C","B","A","S"];
@@ -94,55 +90,98 @@ function upgrade(g){
 
 function simulate(grades,map){
   let sum=0;
+  let credits = grades.map(()=>3); // default credits
+
   for(let i=0;i<grades.length;i++){
-    let g=map[i]||grades[i];
-    sum+=gp2(g);
+    let g = map[i] || grades[i];
+    sum += gradePoint(g) * credits[i];
   }
-  return sum/grades.length;
+
+  return sum / credits.length;
 }
 
 async function analyse(){
 
   let file=document.getElementById("img").files[0];
-  if(!file) return alert("Upload image first");
+  if(!file) return alert("Upload image");
 
-  let text = await Tesseract.recognize(file,'eng')
-    .then(r=>r.data.text);
+  /* ---------- PREPROCESS ---------- */
+  let processed = await new Promise(res=>{
 
+    let img=new Image();
+    img.src=URL.createObjectURL(file);
+
+    img.onload=function(){
+
+      let canvas=document.createElement("canvas");
+      let ctx=canvas.getContext("2d");
+
+      canvas.width=img.width;
+      canvas.height=img.height;
+
+      ctx.drawImage(img,0,0);
+
+      let data=ctx.getImageData(0,0,canvas.width,canvas.height);
+      let d=data.data;
+
+      for(let i=0;i<d.length;i+=4){
+        let avg=(d[i]+d[i+1]+d[i+2])/3;
+        avg = avg>130?255:0;
+        d[i]=d[i+1]=d[i+2]=avg;
+      }
+
+      ctx.putImageData(data,0,0);
+      res(canvas.toDataURL());
+    }
+  });
+
+  /* ---------- OCR ---------- */
+  let result = await Tesseract.recognize(processed,'eng',{
+    tessedit_char_whitelist:'ABCDEF0123456789'
+  });
+
+  let text=result.data.text;
+
+  /* ---------- PARSE ---------- */
   let grades=[];
   text.split("\n").forEach(l=>{
-    let m=l.match(/[ABCDEF]/g);
-    if(m) grades.push(m[0]);
+    let m=l.match(/([A-F])\s*$/);
+    if(m) grades.push(m[1]);
   });
 
   if(grades.length<3){
     document.getElementById("advice").innerText =
-      "Not enough grade data detected.";
+      "⚠ Low OCR confidence. Use clearer image.";
     return;
   }
 
+  /* ---------- CURRENT ---------- */
   let current = simulate(grades,{});
 
+  /* ---------- WEAK SUBJECTS ---------- */
   let weak = grades
-    .map((g,i)=>({i,g,v:gp2(g)}))
+    .map((g,i)=>({i,g,v:gradePoint(g)}))
     .sort((a,b)=>a.v-b.v)
     .slice(0,3);
 
   let msg="📊 CURRENT CGPA: "+current.toFixed(2)+"\n\n";
 
   msg+="⚠️ WEAK SUBJECTS:\n";
+
   weak.forEach((w,i)=>{
     msg+=(i+1)+". Subject "+(w.i+1)+" → "+w.g+"\n";
   });
 
+  /* ---------- IMPROVEMENT ---------- */
   msg+="\n📈 IMPROVEMENT CASES:\n";
 
   let map={};
 
   weak.forEach(w=>{
-    let m={};
-    m[w.i]=upgrade(w.g);
-    let newCGPA=simulate(grades,m);
+    let temp={};
+    temp[w.i]=upgrade(w.g);
+
+    let newCGPA=simulate(grades,temp);
 
     msg+="Improve Subject "+(w.i+1)+" → CGPA "+newCGPA.toFixed(2)+"\n";
 
@@ -150,9 +189,8 @@ async function analyse(){
   });
 
   let best=simulate(grades,map);
-  window.bestCGPA=best;
 
-  msg+="\n🔥 BEST CASE (ALL 3): "+best.toFixed(2);
+  msg+="\n🔥 BEST CASE: "+best.toFixed(2);
 
   document.getElementById("advice").innerText=msg;
 }
