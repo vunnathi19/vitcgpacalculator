@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>VIT GPA & CGPA AI Adviser</title>
+<title>VIT GPA & CGPA Adviser</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -14,13 +14,13 @@
 
 <!-- LOADER -->
 <div id="loader">
-  <h1>🎓 Welcome to VIT AI Academic System</h1>
-  <p>Loading your dashboard...</p>
+  <h1>🎓 Welcome to VIT AI System</h1>
+  <p>Loading...</p>
 </div>
 
 <div id="app">
 
-<h1>VIT GPA & CGPA Adviser System</h1>
+<h1>📘 VIT GPA & CGPA System</h1>
 
 <!-- GPA -->
 <section>
@@ -56,18 +56,8 @@
 
 <!-- GRAPH -->
 <section>
-<h2>📊 CGPA Improvement Graph</h2>
+<h2>📊 CGPA Graph</h2>
 <canvas id="chart"></canvas>
-</section>
-
-<!-- CHATBOT -->
-<section>
-<h2>🤖 AI Adviser Chatbot</h2>
-
-<input id="chatInput" placeholder="Ask: how to improve CGPA?">
-<button onclick="chat()">Ask</button>
-
-<div class="result" id="chatOut"></div>
 </section>
 
 <!-- ADVISER -->
@@ -75,7 +65,7 @@
 <h2>🧠 Adviser (Upload Grade Screenshot)</h2>
 
 <input type="file" id="img">
-<button onclick="analyse()">Analyze & Improve CGPA</button>
+<button onclick="analyse()">Analyze</button>
 
 <div class="result" id="advice"></div>
 
