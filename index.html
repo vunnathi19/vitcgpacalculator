@@ -7,20 +7,19 @@
 <link rel="stylesheet" href="style.css">
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
 <!-- LOADER -->
 <div id="loader">
-  <h1>🎓 Welcome to VIT AI System</h1>
+  <h1>🎓 VIT Academic System</h1>
   <p>Loading...</p>
 </div>
 
 <div id="app">
 
-<h1>📘 VIT GPA & CGPA System</h1>
+<h1>📘 GPA & CGPA System</h1>
 
 <!-- GPA -->
 <section>
@@ -54,18 +53,12 @@
 <div class="result" id="cgpaOut"></div>
 </section>
 
-<!-- GRAPH -->
-<section>
-<h2>📊 CGPA Graph</h2>
-<canvas id="chart"></canvas>
-</section>
-
 <!-- ADVISER -->
 <section>
-<h2>🧠 Adviser (Upload Grade Screenshot)</h2>
+<h2>🧠 Adviser (Grade Analysis)</h2>
 
 <input type="file" id="img">
-<button onclick="analyse()">Analyze</button>
+<button onclick="analyse()">Analyze Screenshot</button>
 
 <div class="result" id="advice"></div>
 
