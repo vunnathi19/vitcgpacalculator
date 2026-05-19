@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
-<title>VIT GPA & CGPA Adviser (PRO)</title>
-
+<title>VIT Academic Suite</title>
 <link rel="stylesheet" href="style.css">
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -11,18 +11,11 @@
 
 <body>
 
-<div id="loader">
-  <h1>🎓 VIT Academic System</h1>
-  <p>Loading...</p>
-</div>
-
-<div id="app">
-
-<h1>📘 GPA & CGPA Adviser</h1>
+<h1>🎓 VIT GPA + CGPA + ANALYZER</h1>
 
 <!-- GPA -->
 <section>
-<h2>📊 GPA Calculator</h2>
+<h2>📊 GPA CALCULATOR</h2>
 
 <table id="gpaTable">
 <tr>
@@ -33,12 +26,12 @@
 <button onclick="addRow()">Add Subject</button>
 <button onclick="calcGPA()">Calculate GPA</button>
 
-<div id="gpaOut"></div>
+<p id="gpaOut"></p>
 </section>
 
 <!-- CGPA -->
 <section>
-<h2>📈 CGPA Calculator</h2>
+<h2>📈 CGPA CALCULATOR</h2>
 
 <table id="cgpaTable">
 <tr>
@@ -49,20 +42,19 @@
 <button onclick="addSem()">Add Semester</button>
 <button onclick="calcCGPA()">Calculate CGPA</button>
 
-<div id="cgpaOut"></div>
+<p id="cgpaOut"></p>
 </section>
 
-<!-- ADVISER -->
+<!-- ANALYZER -->
 <section>
-<h2>🧠 Pro Adviser (OCR Analysis)</h2>
+<h2>🧠 SCREENSHOT ANALYZER</h2>
 
 <input type="file" id="img">
-<button onclick="analyse()">Analyze Screenshot</button>
+<button onclick="analyse()">Analyze</button>
 
-<div id="advice"></div>
+<pre id="out"></pre>
+
 </section>
-
-</div>
 
 <script src="script.js"></script>
 </body>
