@@ -77,13 +77,11 @@ function calcCGPA(){
 
   document.getElementById("cgpaOut").innerText =
     "📈 CGPA = "+window.currentCGPA.toFixed(2);
-
-  drawGraph(window.currentCGPA, window.bestCGPA || window.currentCGPA);
 }
 
 /* ---------- ADVISER ---------- */
 
-function gradePoint(g){
+function gp2(g){
   return {S:10,A:9,B:8,C:7,D:6,E:5,F:0}[g]||0;
 }
 
@@ -98,7 +96,7 @@ function simulate(grades,map){
   let sum=0;
   for(let i=0;i<grades.length;i++){
     let g=map[i]||grades[i];
-    sum+=gradePoint(g);
+    sum+=gp2(g);
   }
   return sum/grades.length;
 }
@@ -106,9 +104,9 @@ function simulate(grades,map){
 async function analyse(){
 
   let file=document.getElementById("img").files[0];
-  if(!file) return alert("Upload image");
+  if(!file) return alert("Upload image first");
 
-  let text=await Tesseract.recognize(file,'eng')
+  let text = await Tesseract.recognize(file,'eng')
     .then(r=>r.data.text);
 
   let grades=[];
@@ -118,14 +116,15 @@ async function analyse(){
   });
 
   if(grades.length<3){
-    document.getElementById("advice").innerText="Not enough data.";
+    document.getElementById("advice").innerText =
+      "Not enough grade data detected.";
     return;
   }
 
-  let current=simulate(grades,{});
+  let current = simulate(grades,{});
 
-  let weak=grades
-    .map((g,i)=>({i,g,v:gradePoint(g)}))
+  let weak = grades
+    .map((g,i)=>({i,g,v:gp2(g)}))
     .sort((a,b)=>a.v-b.v)
     .slice(0,3);
 
@@ -136,35 +135,24 @@ async function analyse(){
     msg+=(i+1)+". Subject "+(w.i+1)+" → "+w.g+"\n";
   });
 
-  msg+="\n📈 IMPROVEMENTS:\n";
+  msg+="\n📈 IMPROVEMENT CASES:\n";
 
   let map={};
+
   weak.forEach(w=>{
     let m={};
     m[w.i]=upgrade(w.g);
     let newCGPA=simulate(grades,m);
+
     msg+="Improve Subject "+(w.i+1)+" → CGPA "+newCGPA.toFixed(2)+"\n";
+
     map[w.i]=upgrade(w.g);
   });
 
   let best=simulate(grades,map);
   window.bestCGPA=best;
 
-  msg+="\n🔥 BEST CASE: "+best.toFixed(2);
+  msg+="\n🔥 BEST CASE (ALL 3): "+best.toFixed(2);
 
   document.getElementById("advice").innerText=msg;
-
-  drawGraph(current,best);
-}
-
-/* ---------- GRAPH ---------- */
-
-function drawGraph(a,b){
-  new Chart(document.getElementById("chart"),{
-    type:"bar",
-    data:{
-      labels:["Current CGPA","Improved CGPA"],
-      datasets:[{data:[a,b]}]
-    }
-  });
 }
