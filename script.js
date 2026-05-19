@@ -6,6 +6,7 @@ setTimeout(() => {
 }, 5000);
 
 /* ---------- GPA ---------- */
+
 function gp(g){
   return {S:10,A:9,B:8,C:7,D:6,E:5,F:0}[g]||0;
 }
@@ -49,6 +50,7 @@ function calcGPA(){
 }
 
 /* ---------- CGPA ---------- */
+
 function addSem(){
   let t=document.getElementById("cgpaTable");
   let r=t.insertRow();
@@ -79,26 +81,7 @@ function calcCGPA(){
   drawGraph(window.currentCGPA, window.bestCGPA || window.currentCGPA);
 }
 
-/* ---------- CHATBOT ---------- */
-function chat(){
-  let q=document.getElementById("chatInput").value.toLowerCase();
-
-  let msg="";
-
-  if(q.includes("cgpa") && q.includes("improve")){
-    msg=`🧠 CGPA STRATEGY:
-- Focus weakest 3 subjects
-- Improve D/E → C/B first
-- Each +1 grade = big CGPA boost`;
-  }
-  else{
-    msg="Ask about CGPA improvement or GPA system.";
-  }
-
-  document.getElementById("chatOut").innerText=msg;
-}
-
-/* ---------- ADVISER ENGINE ---------- */
+/* ---------- ADVISER ---------- */
 
 function gradePoint(g){
   return {S:10,A:9,B:8,C:7,D:6,E:5,F:0}[g]||0;
@@ -114,19 +97,18 @@ function upgrade(g){
 function simulate(grades,map){
   let sum=0;
   for(let i=0;i<grades.length;i++){
-    let g = map[i] || grades[i];
-    sum += gradePoint(g);
+    let g=map[i]||grades[i];
+    sum+=gradePoint(g);
   }
   return sum/grades.length;
 }
 
-/* ---------- IMAGE ANALYSIS + ADVISER ---------- */
 async function analyse(){
 
   let file=document.getElementById("img").files[0];
   if(!file) return alert("Upload image");
 
-  let text = await Tesseract.recognize(file,'eng')
+  let text=await Tesseract.recognize(file,'eng')
     .then(r=>r.data.text);
 
   let grades=[];
@@ -136,14 +118,13 @@ async function analyse(){
   });
 
   if(grades.length<3){
-    document.getElementById("advice").innerText =
-      "Not enough data.";
+    document.getElementById("advice").innerText="Not enough data.";
     return;
   }
 
-  let current = simulate(grades,{});
+  let current=simulate(grades,{});
 
-  let weak = grades
+  let weak=grades
     .map((g,i)=>({i,g,v:gradePoint(g)}))
     .sort((a,b)=>a.v-b.v)
     .slice(0,3);
@@ -151,28 +132,25 @@ async function analyse(){
   let msg="📊 CURRENT CGPA: "+current.toFixed(2)+"\n\n";
 
   msg+="⚠️ WEAK SUBJECTS:\n";
-
   weak.forEach((w,i)=>{
     msg+=(i+1)+". Subject "+(w.i+1)+" → "+w.g+"\n";
   });
 
   msg+="\n📈 IMPROVEMENTS:\n";
 
-  let allMap={};
-
+  let map={};
   weak.forEach(w=>{
-    let map={};
+    let m={};
+    m[w.i]=upgrade(w.g);
+    let newCGPA=simulate(grades,m);
+    msg+="Improve Subject "+(w.i+1)+" → CGPA "+newCGPA.toFixed(2)+"\n";
     map[w.i]=upgrade(w.g);
-    let newCGPA=simulate(grades,map);
-
-    msg+="Case: Improve Subject "+(w.i+1)+" → CGPA "+newCGPA.toFixed(2)+"\n";
-    allMap[w.i]=upgrade(w.g);
   });
 
-  let best=simulate(grades,allMap);
-  window.bestCGPA = best;
+  let best=simulate(grades,map);
+  window.bestCGPA=best;
 
-  msg+="\n🔥 BEST CASE (ALL 3): "+best.toFixed(2);
+  msg+="\n🔥 BEST CASE: "+best.toFixed(2);
 
   document.getElementById("advice").innerText=msg;
 
@@ -180,12 +158,13 @@ async function analyse(){
 }
 
 /* ---------- GRAPH ---------- */
-function drawGraph(before,after){
+
+function drawGraph(a,b){
   new Chart(document.getElementById("chart"),{
     type:"bar",
     data:{
       labels:["Current CGPA","Improved CGPA"],
-      datasets:[{data:[before,after]}]
+      datasets:[{data:[a,b]}]
     }
   });
 }
